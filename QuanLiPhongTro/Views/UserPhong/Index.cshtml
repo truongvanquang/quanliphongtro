@@ -1,0 +1,77 @@
+﻿@using System.Data
+@model DataTable
+@{
+    ViewData["Title"] = "Khám phá phòng trống - SV: 2415053122232";
+    Layout = "_UserLayout";
+}
+
+<div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row gap-6 items-start justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Khám phá phòng trống</h1>
+            <p class="text-base text-gray-500 mt-1">Mã Sinh Viên: 2415053122232</p>
+        </div>
+    </div>
+
+    <form action="/UserPhong/Index" method="get" class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Khoảng giá</label>
+            <select name="khongGia" class="w-full p-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary">
+                <option value="">Tất cả mức giá</option>
+                <option value="duoi3" selected="@(ViewBag.KhongGia == "duoi3")">Dưới 3 triệu</option>
+                <option value="3den5" selected="@(ViewBag.KhongGia == "3den5")">3 - 5 triệu</option>
+                <option value="tren5" selected="@(ViewBag.KhongGia == "tren5")">Trên 5 triệu</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Loại phòng</label>
+            <input type="text" name="loaiPhong" value="@ViewBag.LoaiPhong" placeholder="Ví dụ: VIP, Thường..." class="w-full p-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary" />
+        </div>
+        <div class="flex items-end">
+            <button type="submit" class="w-full bg-[#006591] hover:bg-blue-800 text-white font-bold py-2 rounded-lg text-sm transition-colors shadow-sm">
+                Lọc kết quả
+            </button>
+        </div>
+    </form>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @if (Model != null && Model.Rows.Count > 0)
+        {
+            foreach (DataRow row in Model.Rows)
+            {
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                         alt="Phòng @row["TenPhong"]"
+                         class="w-full h-48 object-cover border-b border-gray-100" />
+
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">Phòng @row["TenPhong"]</h3>
+                            <p class="text-xs text-gray-500 mt-1">Loại: @row["TenLoai"] | Diện tích: @row["DienTich"] m²</p>
+                        </div>
+                        <div>
+                            <p class="text-xl font-bold text-[#006591]">@Convert.ToDecimal(row["GiaThue"]).ToString("N0") ₫/tháng</p>
+                        </div>
+                        <div class="pt-2">
+                            <form action="/UserPhong/DatPhong" method="post">
+                                <input type="hidden" name="maPhong" value="@row["MaPhong"]" />
+                                <input type="hidden" name="giaThue" value="@row["GiaThue"]" />
+                                <a href="/UserPhong/Detail?id=@row["MaPhong"]" class="w-full bg-[#006591] hover:bg-blue-800 text-white py-2 rounded-lg font-bold transition-colors shadow-sm text-sm text-center block">
+                                    Xem chi tiết phòng
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-span-3 text-center py-12 bg-white rounded-xl border border-gray-200">
+                <span class="material-symbols-outlined text-4xl text-gray-300 mb-2">sensor_door</span>
+                <p class="text-gray-500 font-medium">Không tìm thấy phòng trống nào phù hợp.</p>
+            </div>
+        }
+    </div>
+</div>
