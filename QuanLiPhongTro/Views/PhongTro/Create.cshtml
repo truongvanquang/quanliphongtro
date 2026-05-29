@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Thêm phòng mới";
+    Layout = "_Layout";
+}
+
+<div class="mb-4">
+    <h1 class="font-h1 text-2xl font-bold text-on-surface">Thêm phòng mới - SV: 2415053122232</h1>
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 max-w-3xl">
+    <form action="/PhongTro/Create" method="post" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Mã phòng</label>
+                <input type="text" name="MaPhong" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none" placeholder="VD: RM-301" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Tên / Vị trí phòng</label>
+                <input type="text" name="TenPhong" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none" placeholder="VD: Tầng 3 - Căn góc" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Mã loại phòng</label>
+                <input type="text" name="MaLoai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none" placeholder="VD: L01" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Diện tích (m2)</label>
+                <input type="number" name="DienTich" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none" placeholder="VD: 25" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Giá thuê (VNĐ)</label>
+                <input type="number" name="GiaThue" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none" placeholder="VD: 3500000" />
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Trạng thái</label>
+                <select name="TrangThai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary outline-none">
+                    <option value="Đang trống">Đang trống</option>
+                    <option value="Đã thuê">Đã thuê</option>
+                    <option value="Bảo trì">Bảo trì</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex gap-2 mt-6 pt-4 border-t border-gray-100">
+            <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Lưu phòng</button>
+            <a href="/PhongTro/Index" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition-colors flex items-center">Hủy</a>
+        </div>
+    </form>
+</div>

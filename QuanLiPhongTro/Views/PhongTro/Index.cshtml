@@ -1,0 +1,121 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Quản lý phòng trọ";
+    Layout = "_Layout";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-stack-gap rounded-r-lg shadow-sm">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined">error</span>
+            <strong class="font-bold">LỖI: </strong>
+            <span>@TempData["Error"]</span>
+        </div>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-stack-gap rounded-r-lg shadow-sm">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined">check_circle</span>
+            <strong class="font-bold">THÀNH CÔNG: </strong>
+            <span>@TempData["Success"]</span>
+        </div>
+    </div>
+}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-gap">
+    <div>
+        <h1 class="font-h1 text-h1 text-on-surface">Quản lý phòng trọ - SV: 2415053122232</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Quản lý và theo dõi các đơn vị bất động sản của bạn một cách hiệu quả.</p>
+    </div>
+    <a href="/PhongTro/Create" class="flex items-center justify-center gap-2 bg-primary text-white px-6 py-2.5 rounded-full hover:bg-primary/90 transition-colors shadow-sm font-label-md text-label-md">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        Thêm phòng
+    </a>
+</div>
+
+<div class="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] p-card-padding mb-stack-gap flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div class="flex flex-wrap gap-2">
+        <button class="px-4 py-2 rounded-full bg-primary text-white font-label-sm text-label-sm transition-colors shadow-sm">
+            Tất cả phòng (@(Model != null ? Model.Rows.Count : 0))
+        </button>
+    </div>
+</div>
+
+<div class="bg-surface rounded-xl shadow-[0px_2px_4px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col border border-outline-variant/30">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+                <tr class="border-b border-surface-container-highest bg-surface-container-low">
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mã phòng</th>
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Tên/Số phòng</th>
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Loại phòng</th>
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Giá</th>
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-center">Trạng thái</th>
+                    <th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container-highest font-body-sm text-body-sm text-on-surface">
+                @if (Model != null && Model.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in Model.Rows)
+                    {
+                        string status = row["TrangThai"]?.ToString() ?? "";
+                        string badgeClass = "bg-[#bbf7d0] text-[#166534]";
+
+                        if (status.Contains("thuê") || status.Contains("Thuê"))
+                        {
+                            badgeClass = "bg-[#fef08a] text-[#854d0e]";
+                        }
+                        else if (status.Contains("trì") || status.Contains("Trì"))
+                        {
+                            badgeClass = "bg-[#fecaca] text-[#991b1b]";
+                        }
+
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            <td class="p-4 font-medium text-on-surface">@row["MaPhong"]</td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                                        @row["TenPhong"]
+                                    </div>
+                                    <div>
+                                        <div class="font-label-md text-label-md">@row["TenPhong"]</div>
+                                        <div class="text-on-surface-variant text-[11px] mt-0.5">Diện tích: @row["DienTich"] m²</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4 text-on-surface-variant">@row["TenLoai"]</td>
+                            <td class="p-4 text-right font-medium">@Convert.ToDecimal(row["GiaThue"]).ToString("N0") đ</td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full @badgeClass font-label-sm text-label-sm uppercase">@status</span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <a href="/PhongTro/Edit?id=@row["MaPhong"]" class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-md transition-colors" title="Chỉnh sửa">
+                                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                                    </a>
+                                    <a href="/PhongTro/Delete?id=@row["MaPhong"]" onclick="return confirm('Ông có chắc chắn muốn xóa phòng này khỏi CSDL không?');" class="p-1.5 text-on-surface-variant hover:text-red-600 hover:bg-red-100 rounded-md transition-colors" title="Xóa">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-500">
+                            Không có dữ liệu phòng trọ nào trong hệ thống. Hãy thêm phòng mới!
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
