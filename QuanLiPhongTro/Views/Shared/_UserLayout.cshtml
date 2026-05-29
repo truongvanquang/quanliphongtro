@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cổng Người Thuê</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+        darkMode: "class",
+        theme: {
+        extend: {
+        colors: {
+        "primary": "#006591",
+        "on-surface": "#171c20",
+        "surface-variant": "#dee3e9",
+        "on-surface-variant": "#3e4850",
+        "surface-container-low": "#ffffff",
+        "surface-container-highest": "#dee3e9",
+        "background": "#f6faff"
+        },
+        fontFamily: {
+        "body-md": ["Inter"]
+        }
+        }
+        }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex font-body-md">
+
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+        string activeClass = "flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-blue-50";
+        string inactiveClass = "flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-gray-100 transition-colors border-r-4 border-transparent";
+    }
+
+    <aside class="fixed left-0 top-0 h-full z-40 flex flex-col bg-white w-[240px] shadow-sm border-r border-gray-200">
+        <div class="p-6 border-b border-gray-100">
+            <h2 class="text-2xl font-bold text-primary">Phòng Trọ VN</h2>
+            <p class="text-xs text-gray-500 mt-1">Cổng người thuê - SV: 2415053122232</p>
+        </div>
+
+        <nav class="flex-1 px-4 py-4 flex flex-col gap-1">
+            <a class="@(currentController == "UserDashboard" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserDashboard")">
+                <span class="material-symbols-outlined">home</span>
+                <span class="text-sm">Tổng quan</span>
+            </a>
+            <a class="@(currentController == "UserPhong" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserPhong")">
+                <span class="material-symbols-outlined">search</span>
+                <span class="text-sm">Khám phá</span>
+            </a>
+            <a class="@(currentController == "UserHopDong" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserHopDong")">
+                <span class="material-symbols-outlined">receipt_long</span>
+                <span class="text-sm">Hợp đồng của tôi</span>
+            </a>
+
+            <a class="@(currentController == "UserThanhToan" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserThanhToan")">
+                <span class="material-symbols-outlined">history</span>
+                <span class="text-sm">Lịch sử thanh toán</span>
+            </a>
+
+            <a class="@(currentController == "UserYeuCau" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserYeuCau")">
+                <span class="material-symbols-outlined">build</span>
+                <span class="text-sm">Yêu cầu sửa chữa</span>
+            </a>
+            <a class="@(currentController == "UserTaiKhoan" ? activeClass : inactiveClass)" href="@Url.Action("Index", "UserTaiKhoan")">
+                <span class="material-symbols-outlined">account_circle</span>
+                <span class="text-sm">Hồ sơ</span>
+            </a>
+        </nav>
+
+        <div class="p-4 mt-auto border-t border-gray-100">
+            <a href="/Home/Index" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer w-full">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold">U</div>
+                <div>
+                    <p class="text-sm font-bold text-on-surface">Khách thuê</p>
+                    <p class="text-xs text-gray-500">Về trang chủ</p>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <div class="ml-[240px] flex-1 flex flex-col min-h-screen">
+        <header class="sticky top-0 z-30 flex justify-end items-center px-8 h-16 w-full bg-white border-b border-gray-200">
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+        </header>
+
+        <main class="flex-1 p-8 bg-[#f6faff] overflow-y-auto">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>
