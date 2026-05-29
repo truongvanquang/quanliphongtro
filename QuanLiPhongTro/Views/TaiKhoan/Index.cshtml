@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Quản lý tài khoản";
+}
+
+<div class="flex justify-between items-end mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-on-surface mb-2">Quản lý tài khoản</h1>
+        <p class="text-sm text-on-surface-variant">Quản lý quyền truy cập của quản trị viên và nhân viên vào hệ thống quản lý.</p>
+    </div>
+    <button class="bg-primary hover:bg-primary/90 text-white font-bold text-sm px-6 py-2.5 rounded-lg flex items-center gap-2 shadow-sm transition-colors">
+        <span class="material-symbols-outlined text-sm">person_add</span>
+        Thêm người dùng mới
+    </button>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+    <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+        <div class="flex gap-2">
+            <button class="px-4 py-1.5 rounded-md bg-blue-50 text-primary font-bold text-xs">Tất cả người dùng (24)</button>
+            <button class="px-4 py-1.5 rounded-md text-gray-500 hover:bg-gray-200 font-bold text-xs transition-colors">Quản trị viên</button>
+            <button class="px-4 py-1.5 rounded-md text-gray-500 hover:bg-gray-200 font-bold text-xs transition-colors">Nhân viên</button>
+        </div>
+        <button class="flex items-center gap-1 text-gray-500 hover:text-primary font-bold text-xs">
+            <span class="material-symbols-outlined text-lg">filter_list</span> Lọc
+        </button>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                    <th class="py-3 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider w-1/3">Người dùng</th>
+                    <th class="py-3 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider">Vai trò</th>
+                    <th class="py-3 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider">Đăng nhập lần cuối</th>
+                    <th class="py-3 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider">Trạng thái</th>
+                    <th class="py-3 px-6 text-xs font-bold uppercase text-gray-500 tracking-wider text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-100">
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="py-4 px-6 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center font-bold">A</div>
+                        <div>
+                            <p class="font-bold text-gray-800">Nguyễn Văn A</p>
+                            <p class="text-xs text-gray-500">nguyenvana@phongtro.vn</p>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center gap-1 text-xs font-bold text-gray-600">
+                            <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span> Quản trị viên
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-500">Hôm nay, 08:42 AM</td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-primary">HOẠT ĐỘNG</span>
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <button class="text-gray-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="py-4 px-6 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center font-bold">B</div>
+                        <div>
+                            <p class="font-bold text-gray-800">Trần Thị B</p>
+                            <p class="text-xs text-gray-500">tranthib@phongtro.vn</p>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center gap-1 text-xs font-bold text-gray-600">
+                            <span class="material-symbols-outlined text-[16px]">support_agent</span> Nhân viên
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-500">Hôm qua, 16:30 PM</td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-primary">HOẠT ĐỘNG</span>
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <button class="text-gray-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+                    </td>
+                </tr>
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="py-4 px-6 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">C</div>
+                        <div>
+                            <p class="font-bold text-gray-800">Lê Văn C</p>
+                            <p class="text-xs text-gray-500">levanc@phongtro.vn</p>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center gap-1 text-xs font-bold text-gray-600">
+                            <span class="material-symbols-outlined text-[16px]">support_agent</span> Nhân viên
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-gray-500">12 thg 10, 2023</td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-600">ĐANG KHÓA</span>
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <button class="text-gray-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

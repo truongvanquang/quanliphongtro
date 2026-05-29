@@ -1,0 +1,174 @@
+﻿@using System.Data
+@{
+    ViewData["Title"] = "Tài khoản của tôi - SV: 2415053122232";
+    Layout = "_UserLayout";
+
+    DataRow thongTin = ViewBag.ThongTin as DataRow;
+
+    string hoTen = thongTin != null && thongTin.Table.Columns.Contains("HoTen") ? thongTin["HoTen"].ToString() : "";
+    string email = thongTin != null && thongTin.Table.Columns.Contains("Email") ? thongTin["Email"].ToString() : "";
+    string sdt = thongTin != null && thongTin.Table.Columns.Contains("SoDienThoai") && thongTin["SoDienThoai"] != DBNull.Value ? thongTin["SoDienThoai"].ToString() : "Chưa cập nhật";
+    string cccd = thongTin != null && thongTin.Table.Columns.Contains("CCCD") && thongTin["CCCD"] != DBNull.Value ? thongTin["CCCD"].ToString() : "Chưa cập nhật";
+    string trangThai = thongTin != null && thongTin.Table.Columns.Contains("TrangThai") ? thongTin["TrangThai"].ToString() : "Đang hoạt động";
+
+    string kytuDau = !string.IsNullOrEmpty(hoTen) ? hoTen.Substring(0, 1).ToUpper() : "U";
+}
+
+<div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Quản lý tài khoản</h1>
+            <p class="text-base text-gray-500 mt-1">Thông tin cá nhân và bảo mật. SV: 2415053122232</p>
+        </div>
+        <button type="button" onclick="document.getElementById('modalCapNhat').classList.remove('hidden')"
+                class="bg-[#006591] hover:bg-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md flex items-center gap-2 w-fit">
+            <span class="material-symbols-outlined">edit</span>
+            Cập nhật hồ sơ
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="px-4 py-3 bg-green-50 text-green-700 rounded-lg text-sm font-bold border border-green-200">
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="px-4 py-3 bg-red-50 text-red-700 rounded-lg text-sm font-bold border border-red-200">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 flex flex-col items-center">
+                <div class="w-24 h-24 bg-blue-100 text-[#006591] text-4xl font-bold flex items-center justify-center rounded-full mb-4">
+                    @kytuDau
+                </div>
+                <h2 class="text-xl font-bold text-gray-900 text-center">@hoTen</h2>
+                <p class="text-sm text-gray-500 text-center mb-6">Khách thuê phòng</p>
+
+                <div class="w-full space-y-3 pt-6 border-t border-gray-100 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Trạng thái:</span>
+                        <span class="font-bold text-green-600">@trangThai</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#006591]">security</span>
+                    Bảo mật tài khoản
+                </h3>
+                <button type="button" onclick="document.getElementById('modalMatKhau').classList.remove('hidden')" class="w-full py-2.5 border border-gray-300 rounded-lg text-gray-700 font-bold hover:bg-gray-50 transition-colors text-sm shadow-sm">
+                    Đổi mật khẩu
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Thông tin chi tiết</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Họ và tên</p>
+                        <p class="text-base font-medium text-gray-900">@hoTen</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Số điện thoại</p>
+                        <p class="text-base font-medium text-gray-900">@sdt</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                        <p class="text-base font-medium text-gray-900">@email</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Số CCCD</p>
+                        <p class="text-base font-medium text-gray-900">@cccd</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalCapNhat" class="hidden fixed inset-0 bg-black/60 z-[99] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-900">Cập nhật thông tin cá nhân</h3>
+            <button type="button" onclick="document.getElementById('modalCapNhat').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form action="/UserTaiKhoan/CapNhatThongTin" method="post" class="p-6 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Họ và tên</label>
+                    <input type="text" name="HoTen" value="@hoTen" required class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Số điện thoại</label>
+                    <input type="text" name="SoDienThoai" value="@(sdt == "Chưa cập nhật" ? "" : sdt)" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email (Không thể sửa)</label>
+                    <input type="email" value="@email" disabled class="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm outline-none bg-gray-100 text-gray-500 cursor-not-allowed" />
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Số CCCD</label>
+                    <input type="text" name="CCCD" value="@(cccd == "Chưa cập nhật" ? "" : cccd)" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex gap-3">
+                <button type="button" onclick="document.getElementById('modalCapNhat').classList.add('hidden')"
+                        class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-200 transition-colors">
+                    Hủy bỏ
+                </button>
+                <button type="submit"
+                        class="flex-1 bg-[#006591] text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition-colors shadow-sm">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modalMatKhau" class="hidden fixed inset-0 bg-black/60 z-[99] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-900">Đổi mật khẩu</h3>
+            <button type="button" onclick="document.getElementById('modalMatKhau').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form action="/UserTaiKhoan/DoiMatKhau" method="post" class="p-6 space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Mật khẩu cũ</label>
+                <input type="password" name="matkhauCu" required class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Mật khẩu mới</label>
+                <input type="password" name="matkhauMoi" required class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Xác nhận mật khẩu</label>
+                <input type="password" name="xacNhan" required class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex gap-3">
+                <button type="button" onclick="document.getElementById('modalMatKhau').classList.add('hidden')"
+                        class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-200 transition-colors">
+                    Hủy bỏ
+                </button>
+                <button type="submit"
+                        class="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm">
+                    Xác nhận đổi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
