@@ -1,0 +1,22 @@
+﻿@using System.Data
+@model DataRow
+@{
+    ViewData["Title"] = "Xác nhận đặt phòng - SV: 2415053122232";
+    Layout = "_UserLayout";
+}
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-200 mt-10">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Xác Nhận Đặt Phòng</h2>
+    <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 mb-6">
+        <p class="text-lg text-gray-800 mb-2">Bạn đang tiến hành đặt: <strong>Phòng @Model["TenPhong"]</strong></p>
+        <p class="text-lg text-gray-800 mb-2">Giá thuê: <strong>@Convert.ToDecimal(Model["GiaThue"]).ToString("N0") ₫/tháng</strong></p>
+        <p class="text-sm text-gray-600 mt-4">* Tiền cọc tương đương 1 tháng tiền thuê. Quản trị viên sẽ liên hệ để làm thủ tục.</p>
+    </div>
+    <form action="/UserPhong/DatPhong" method="post" class="flex gap-4 justify-center">
+        <input type="hidden" name="maPhong" value="@Model["MaPhong"]" />
+        <input type="hidden" name="giaThue" value="@Model["GiaThue"]" />
+        <a href="/UserPhong/Detail?id=@Model["MaPhong"]" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-bold rounded-lg">Quay lại</a>
+        <button type="submit" class="px-6 py-2.5 bg-[#006591] hover:bg-blue-800 text-white font-bold rounded-lg shadow-sm">
+            Chắc chắn đặt phòng
+        </button>
+    </form>
+</div>

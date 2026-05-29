@@ -1,0 +1,186 @@
+﻿@{
+    ViewData["Title"] = "Tổng quan người thuê";
+    Layout = "_UserLayout";
+
+    // Khởi tạo các biến để lấy dữ liệu động từ Controller
+    var thongTin = ViewBag.ThongTin as System.Data.DataRow;
+
+    string hoTen = thongTin != null ? thongTin["HoTen"].ToString() : "Khách hàng";
+    string tenPhong = thongTin != null ? thongTin["TenPhong"].ToString() : "Chưa cập nhật";
+    decimal giaThue = thongTin != null && thongTin["GiaThue"] != DBNull.Value ? Convert.ToDecimal(thongTin["GiaThue"]) : 0;
+    decimal tienCoc = thongTin != null && thongTin["TienCoc"] != DBNull.Value ? Convert.ToDecimal(thongTin["TienCoc"]) : 0;
+
+    string ngayLap = thongTin != null && thongTin["NgayLap"] != DBNull.Value ? Convert.ToDateTime(thongTin["NgayLap"]).ToString("dd/MM/yyyy") : "--/--/----";
+    string ngayKetThuc = thongTin != null && thongTin["NgayKetThuc"] != DBNull.Value ? Convert.ToDateTime(thongTin["NgayKetThuc"]).ToString("dd/MM/yyyy") : "--/--/----";
+
+    decimal nextPayment = ViewBag.ThanhToanTiepTheo != null ? Convert.ToDecimal(ViewBag.ThanhToanTiepTheo) : 0;
+    DateTime? hanChot = ViewBag.HanChot as DateTime?;
+
+    string hanChotText = "Không có khoản nợ";
+    if (hanChot.HasValue)
+    {
+        int days = (hanChot.Value - DateTime.Now).Days;
+        if (days < 0) hanChotText = $"Đã quá hạn {-days} ngày";
+        else if (days == 0) hanChotText = "Hạn chót hôm nay";
+        else hanChotText = $"Hạn chót trong {days} ngày";
+    }
+}
+
+<div class="mb-8">
+    <h2 class="text-3xl font-bold text-on-surface">Chào mừng trở lại, @hoTen</h2>
+    <p class="text-base text-on-surface-variant mt-1">Đây là tổng quan mới nhất về phòng trọ của bạn.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <span class="inline-block px-3 py-1 rounded-full bg-blue-50 text-primary text-xs font-bold uppercase tracking-wider mb-3">Chỗ ở hiện tại</span>
+                <h3 class="text-2xl font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">meeting_room</span>
+                    Phòng @tenPhong
+                </h3>
+                <p class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">location_on</span>
+                    Hệ thống Phòng Trọ VN
+                </p>
+            </div>
+            <div class="text-right">
+                <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-bold border border-green-200">
+                    Hợp đồng hiệu lực
+                </span>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 p-4 bg-gray-50 rounded-lg">
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-bold">Tiền thuê hàng tháng</p>
+                <p class="text-lg font-bold text-on-surface mt-1">@giaThue.ToString("N0") ₫</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-bold">Tiền đặt cọc</p>
+                <p class="text-lg font-bold text-on-surface mt-1">@tienCoc.ToString("N0") ₫</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-bold">Ngày chuyển vào</p>
+                <p class="text-sm text-on-surface mt-1 font-medium">@ngayLap</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase font-bold">Hết hạn hợp đồng</p>
+                <p class="text-sm text-on-surface mt-1 font-medium">@ngayKetThuc</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-1 bg-[#006591] text-white rounded-xl p-6 shadow-md flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+        <div class="relative z-10">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-semibold">Thanh toán tiếp theo</h3>
+                <span class="material-symbols-outlined text-white/80">calendar_today</span>
+            </div>
+            <p class="text-sm text-white/80 uppercase font-bold tracking-wide">@hanChotText</p>
+            <div class="mt-6">
+                <p class="text-4xl font-bold tracking-tight">@nextPayment.ToString("N0") ₫</p>
+                <p class="text-xs text-white/80 mt-2">Bao gồm Tiền thuê + Tiền ích</p>
+            </div>
+        </div>
+        <button class="relative z-10 w-full mt-6 py-3 bg-white text-[#006591] text-sm rounded-lg hover:bg-gray-100 transition-colors shadow-sm font-bold flex justify-center items-center gap-2">
+            <span>Thanh toán ngay</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-on-surface">Lịch sử thanh toán</h3>
+            <a href="#" class="text-primary text-sm font-semibold hover:underline">Xem tất cả</a>
+        </div>
+        <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">Tiền thuê & Tiện ích tháng 10</p>
+                        <p class="text-xs text-gray-500">Đã trả vào 02 Th10, 2023 qua Chuyển khoản</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-on-surface">6,100,000 ₫</p>
+                    <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-1 rounded uppercase">Đã thanh toán</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">Tiền thuê & Tiện ích tháng 9</p>
+                        <p class="text-xs text-gray-500">Đã trả vào 05 Th9, 2023 qua Momo</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-on-surface">6,350,000 ₫</p>
+                    <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-1 rounded uppercase">Đã thanh toán</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface">Tiền thuê & Tiền cọc tháng 8</p>
+                        <p class="text-xs text-gray-500">Đã trả vào 15 Th8, 2023 bằng Tiền mặt</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold text-on-surface">16,500,000 ₫</p>
+                    <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-1 rounded uppercase">Đã thanh toán</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-1 bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex flex-col">
+        <h3 class="text-xl font-bold text-on-surface mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-orange-500">campaign</span>
+            Thông báo
+        </h3>
+
+        <div class="space-y-4 mb-6 flex-1">
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 relative">
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-lg"></div>
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-bold text-sm text-on-surface">Bảo trì thang máy</h4>
+                    <span class="text-xs text-gray-500">Hôm nay, 09:00</span>
+                </div>
+                <p class="text-xs text-gray-600 line-clamp-2">Thang máy chính sẽ tạm dừng để bảo trì định kỳ vào Thứ Bảy tới từ 10 giờ sáng đến 2 giờ chiều. Vui lòng sử dụng...</p>
+            </div>
+
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-bold text-sm text-on-surface">Ghi số đồng hồ nước</h4>
+                    <span class="text-xs text-gray-500">28 Th10</span>
+                </div>
+                <p class="text-xs text-gray-600 line-clamp-2">Việc ghi số đồng hồ nước hàng tháng sẽ diễn ra vào ngày 30. Vui lòng đảm bảo có người ở nhà hoặc gửi ảnh chụp...</p>
+            </div>
+        </div>
+
+        <div class="mt-auto bg-blue-50 p-4 rounded-lg flex items-center justify-between border border-blue-100">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[18px]">build</span>
+                </div>
+                <span class="text-sm font-bold text-primary">Cần sửa chữa?</span>
+            </div>
+            <button class="px-3 py-1.5 bg-white border border-primary text-primary text-xs font-bold rounded hover:bg-primary hover:text-white transition-colors">
+                Yêu cầu mới
+            </button>
+        </div>
+    </div>
+</div>

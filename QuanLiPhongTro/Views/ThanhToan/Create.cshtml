@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Thêm hóa đơn mới";
+    Layout = "_Layout";
+}
+
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border mt-6">
+    <h2 class="text-2xl font-bold mb-6">Thêm hóa đơn mới - SV: 2415053122232</h2>
+    <form action="/ThanhToan/Create" method="post" class="space-y-4">
+
+        <div>
+            <label class="block font-bold mb-1">Mã hóa đơn</label>
+            <input type="text" name="MaHoaDon" required class="w-full p-2 border rounded-lg" />
+        </div>
+
+        <div>
+            <label class="block font-bold mb-1">Chọn Hợp đồng (Khách - Phòng)</label>
+            <select name="MaHopDong" required class="w-full p-2 border rounded-lg">
+                <option value="">-- Bấm để chọn hợp đồng --</option>
+                @if (ViewBag.HopDongList != null)
+                {
+                    foreach (System.Data.DataRow row in ViewBag.HopDongList.Rows)
+                    {
+                        <option value="@row["MaHopDong"]">
+                            Hợp đồng: @row["MaHopDong"] - Khách: @row["HoTen"] - Phòng: @row["TenPhong"]
+                        </option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div>
+            <label class="block font-bold mb-1">Hạn thanh toán</label>
+            <input type="date" name="HanThanhToan" required class="w-full p-2 border rounded-lg" />
+        </div>
+
+        <div>
+            <label class="block font-bold mb-1">Tổng tiền (VNĐ)</label>
+            <input type="number" name="TongTien" required class="w-full p-2 border rounded-lg" />
+        </div>
+
+        <div>
+            <label class="block font-bold mb-1">Trạng thái</label>
+            <select name="TrangThai" class="w-full p-2 border rounded-lg">
+                <option value="Chưa thanh toán">Chưa thanh toán</option>
+                <option value="Đã thanh toán">Đã thanh toán</option>
+                <option value="Quá hạn">Quá hạn</option>
+            </select>
+        </div>
+
+        <div class="flex gap-2 mt-4 pt-4 border-t">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold">Lưu hóa đơn</button>
+            <a href="/ThanhToan/Index" class="bg-gray-200 text-black px-6 py-2 rounded-lg font-bold text-center block">Hủy</a>
+        </div>
+    </form>
+</div>

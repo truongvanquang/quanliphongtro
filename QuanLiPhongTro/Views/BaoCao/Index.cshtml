@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Báo cáo & Thống kê";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+    <div class="flex flex-col gap-1">
+        <h2 class="font-h1 text-3xl font-bold text-on-surface">Báo cáo & Thống kê</h2>
+        <p class="font-body-md text-on-surface-variant">Phân tích toàn diện về doanh thu, tỷ lệ lấp đầy và chi phí.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <div class="flex items-center bg-white border border-outline-variant rounded-lg overflow-hidden h-10">
+            <button class="px-4 py-2 text-sm font-bold text-on-surface bg-gray-100 border-r border-outline-variant">Từ đầu năm</button>
+            <button class="px-4 py-2 text-sm font-bold text-on-surface hover:bg-gray-50">12 Tháng</button>
+        </div>
+        <button class="h-10 px-4 rounded-lg bg-primary text-white font-bold text-sm flex items-center gap-2 hover:bg-primary/90 shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> Báo cáo PDF
+        </button>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-grid-gutter mb-8">
+    <div class="bg-white rounded-xl p-5 flex flex-col gap-2 shadow-sm border border-gray-100 relative overflow-hidden">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-500 uppercase">Tổng doanh thu (YTD)</span>
+            <span class="material-symbols-outlined text-primary bg-blue-50 p-1 rounded-md">account_balance_wallet</span>
+        </div>
+        <div class="text-3xl font-bold text-on-surface mt-2">₫1.2B</div>
+        <div class="flex items-center gap-1 mt-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">trending_up</span>
+            <span class="text-xs font-bold text-primary">+15.4%</span>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl p-5 flex flex-col gap-2 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-500 uppercase">Tỷ lệ lấp đầy</span>
+            <span class="material-symbols-outlined text-primary bg-blue-50 p-1 rounded-md">meeting_room</span>
+        </div>
+        <div class="text-3xl font-bold text-on-surface mt-2">92%</div>
+        <div class="flex items-center gap-1 mt-1">
+            <span class="text-xs text-gray-400">Tăng 2.1% so với tháng trước</span>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl p-5 flex flex-col gap-2 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-500 uppercase">Thời gian thuê TB</span>
+            <span class="material-symbols-outlined text-orange-500 bg-orange-50 p-1 rounded-md">hourglass_top</span>
+        </div>
+        <div class="text-3xl font-bold text-on-surface mt-2">14 tháng</div>
+        <div class="flex items-center gap-1 mt-1"><span class="text-xs text-gray-400">Ổn định</span></div>
+    </div>
+    <div class="bg-white rounded-xl p-5 flex flex-col gap-2 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-500 uppercase">Phòng trống</span>
+            <span class="material-symbols-outlined text-red-500 bg-red-50 p-1 rounded-md">key_off</span>
+        </div>
+        <div class="text-3xl font-bold text-on-surface mt-2">8%</div>
+        <div class="flex items-center gap-1 mt-1">
+            <span class="text-xs text-red-500 font-bold">-1.5%</span>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-grid-gutter">
+    <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col gap-6">
+        <div class="flex justify-between items-center">
+            <h3 class="font-bold text-lg text-on-surface">Doanh thu qua 12 tháng</h3>
+            <span class="text-xs text-gray-400">Đơn vị: Triệu VNĐ</span>
+        </div>
+        <div class="flex-1 min-h-[250px] flex items-end justify-between gap-2 pt-4 border-b border-gray-100 relative">
+            <div class="flex-1 flex items-end justify-between h-full gap-2">
+                <div class="w-full bg-blue-100 rounded-t-sm h-[40%] hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-100 rounded-t-sm h-[45%] hover:bg-blue-200 transition-colors"></div>
+                <div class="w-full bg-blue-200 rounded-t-sm h-[60%] hover:bg-blue-300 transition-colors"></div>
+                <div class="w-full bg-blue-200 rounded-t-sm h-[55%] hover:bg-blue-300 transition-colors"></div>
+                <div class="w-full bg-blue-300 rounded-t-sm h-[70%] hover:bg-blue-400 transition-colors"></div>
+                <div class="w-full bg-blue-300 rounded-t-sm h-[85%] hover:bg-blue-400 transition-colors"></div>
+                <div class="w-full bg-primary rounded-t-sm h-[100%]"></div>
+            </div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 px-2">
+            <span>Th6</span><span>Th7</span><span>Th8</span><span>Th9</span><span>Th10</span><span>Th11</span><span class="font-bold text-primary">Th12</span>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col gap-4">
+        <h3 class="font-bold text-lg text-on-surface">Tình trạng lấp đầy</h3>
+        <div class="flex-1 flex items-center justify-center relative my-4">
+            <div class="w-32 h-32 rounded-full border-[12px] border-gray-100 relative flex items-center justify-center">
+                <div class="absolute inset-0 border-[12px] border-primary rounded-full" style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+                <span class="text-2xl font-bold text-on-surface">92%</span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span>Đã thuê</span></div>
+                <span class="font-bold">184</span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-gray-200"></div><span>Trống</span></div>
+                <span class="font-bold">16</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8">
+    <div class="p-5 border-b border-gray-100">
+        <h3 class="font-bold text-lg text-on-surface">Biến động doanh thu gần đây</h3>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 border-b border-gray-100">
+                    <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase">Ngày</th>
+                    <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase">Phòng</th>
+                    <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase">Loại</th>
+                    <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase text-right">Số tiền</th>
+                    <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase text-center">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                <tr class="border-b border-gray-50 hover:bg-gray-50">
+                    <td class="py-4 px-6 text-gray-500">24/10/2023</td>
+                    <td class="py-4 px-6 font-bold">Phòng 104</td>
+                    <td class="py-4 px-6">Thu nhập</td>
+                    <td class="py-4 px-6 text-right font-bold text-primary">+ ₫500,000</td>
+                    <td class="py-4 px-6 text-center"><span class="px-2 py-1 rounded bg-blue-50 text-primary font-bold text-[10px]">ĐÃ XONG</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
