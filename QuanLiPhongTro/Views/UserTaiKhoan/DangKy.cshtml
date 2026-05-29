@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Đăng ký tài khoản - SV: 2415053122232";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+        font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-[#006591] p-6 text-center">
+            <h2 class="text-2xl font-bold text-white">Đăng Ký Tài Khoản</h2>
+            <p class="text-blue-100 mt-2 text-sm">Hệ thống Quản Lý Phòng Trọ</p>
+            <p class="text-blue-200 mt-1 text-xs font-bold">SV: 2415053122232</p>
+        </div>
+        <div class="p-8">
+            @if (TempData["Error"] != null)
+            {
+                <div class="mb-5 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm font-bold">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <form action="/UserTaiKhoan/DangKy" method="post" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label>
+                    <input type="text" name="hoTen" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#006591] focus:border-[#006591] outline-none transition-colors text-sm" placeholder="Nhập họ và tên..." />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Số điện thoại</label>
+                    <input type="tel" name="soDienThoai" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#006591] focus:border-[#006591] outline-none transition-colors text-sm" placeholder="Nhập số điện thoại..." />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Email đăng nhập</label>
+                    <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#006591] focus:border-[#006591] outline-none transition-colors text-sm" placeholder="Nhập địa chỉ email..." />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Mật khẩu</label>
+                    <input type="password" name="matKhau" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#006591] focus:border-[#006591] outline-none transition-colors text-sm" placeholder="Tạo mật khẩu..." />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Xác nhận mật khẩu</label>
+                    <input type="password" name="xacNhanMatKhau" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#006591] focus:border-[#006591] outline-none transition-colors text-sm" placeholder="Nhập lại mật khẩu..." />
+                </div>
+
+                <button type="submit" class="w-full bg-[#006591] text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition-colors mt-4 shadow-md">
+                    Đăng Ký
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm text-gray-500">
+                Đã có tài khoản?
+                <a href="/UserTaiKhoan/DangNhap" class="text-[#006591] font-bold hover:underline">Đăng nhập tại đây</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
