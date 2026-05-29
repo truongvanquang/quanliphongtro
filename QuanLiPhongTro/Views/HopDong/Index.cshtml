@@ -1,0 +1,123 @@
+﻿@model System.Data.DataTable
+@{
+    ViewData["Title"] = "Quản lý hợp đồng";
+    Layout = "_Layout";
+
+    string currentSearch = Context.Request.Query["search"].ToString();
+    string currentStatus = Context.Request.Query["status"].ToString();
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="mb-4 px-4 py-3 bg-green-100 text-green-800 rounded-lg border border-green-200 text-sm font-medium">
+        ✅ @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="mb-4 px-4 py-3 bg-red-100 text-red-800 rounded-lg border border-red-200 text-sm font-medium">
+        ❌ @TempData["Error"]
+    </div>
+}
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Hợp đồng hiệu lực</p>
+        <h3 class="text-3xl font-bold text-gray-800">@(Model?.Select("TrangThai='Hiệu lực'").Length ?? 0)</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Sắp hết hạn</p>
+        <h3 class="text-3xl font-bold text-orange-500">@(Model?.Select("TrangThai='Sắp hết hạn'").Length ?? 0)</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Kết thúc tháng này</p>
+        <h3 class="text-3xl font-bold text-red-500">0</h3>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="p-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+        <form method="get" class="flex gap-2 flex-wrap">
+            <input name="search" value="@currentSearch"
+                   class="px-4 py-2 border rounded-lg w-64 text-sm"
+                   placeholder="Tìm tên khách, mã phòng..." />
+            <select name="status" class="px-4 py-2 border rounded-lg text-sm">
+                @{
+                    var statusOptions = new[] { ("", "Tất cả"), ("Hiệu lực", "Hiệu lực"), ("Sắp hết hạn", "Sắp hết hạn"), ("Hết hạn", "Hết hạn") };
+                    foreach (var opt in statusOptions)
+                    {
+                        if (opt.Item1 == currentStatus)
+                        {
+                            <option value="@opt.Item1" selected>@opt.Item2</option>
+                        }
+                        else
+                        {
+                            <option value="@opt.Item1">@opt.Item2</option>
+                        }
+                    }
+                }
+            </select>
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">Lọc</button>
+        </form>
+
+        <a href="/HopDong/Create"
+           class="flex items-center gap-2 bg-[#006591] hover:bg-blue-800 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Tạo hợp đồng mới
+        </a>
+    </div>
+
+    <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+            <tr>
+                <th class="px-6 py-3 text-left">Mã HĐ</th>
+                <th class="px-6 py-3 text-left">Khách thuê</th>
+                <th class="px-6 py-3 text-left">Phòng</th>
+                <th class="px-6 py-3 text-left">Thời hạn</th>
+                <th class="px-6 py-3 text-center">Trạng thái</th>
+                <th class="px-6 py-3 text-right">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y">
+            @if (Model == null || Model.Rows.Count == 0)
+            {
+                <tr>
+                    <td colspan="6" class="px-6 py-10 text-center text-gray-400">Chưa có hợp đồng nào.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (System.Data.DataRow row in Model.Rows)
+                {
+                    string trangThai = row["TrangThai"].ToString();
+                    string badgeClass = trangThai == "Hiệu lực"
+                        ? "bg-green-100 text-green-700"
+                        : trangThai == "Sắp hết hạn"
+                            ? "bg-orange-100 text-orange-700"
+                            : "bg-red-100 text-red-700";
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 text-gray-500 font-mono text-xs">@row["MaHopDong"]</td>
+                        <td class="px-6 py-4 font-bold text-gray-800">@row["HoTen"]</td>
+                        <td class="px-6 py-4 text-gray-600">@row["TenPhong"]</td>
+                        <td class="px-6 py-4 text-gray-500">
+                            @Convert.ToDateTime(row["NgayBatDau"]).ToString("dd/MM/yyyy")
+                            &nbsp;–&nbsp;
+                            @Convert.ToDateTime(row["NgayKetThuc"]).ToString("dd/MM/yyyy")
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2 py-1 rounded text-[10px] font-bold uppercase @badgeClass">@trangThai</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="/HopDong/Details?id=@row["MaHopDong"]"
+                               class="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                                Xem chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
