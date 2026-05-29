@@ -1,0 +1,173 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Yêu cầu sửa chữa";
+    Layout = "_Layout";
+
+    int total = Model?.Rows.Count ?? 0;
+    int highPriority = 0;
+    int pending = 0;
+    int completed = 0;
+
+    if (Model != null)
+    {
+        foreach (System.Data.DataRow r in Model.Rows)
+        {
+            string status = r["TrangThai"]?.ToString() ?? "";
+            string priority = r["UuTien"]?.ToString() ?? "";
+
+            if (status == "Đang chờ") pending++;
+            if (status.Contains("Hoàn thành")) completed++;
+            if (priority == "Cao") highPriority++;
+        }
+    }
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="bg-green-50 text-green-700 p-4 mb-4 rounded-lg font-bold">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="bg-red-50 text-red-700 p-4 mb-4 rounded-lg font-bold">@TempData["Error"]</div>
+}
+
+<div class="flex flex-col gap-grid-gutter mb-4">
+    <div class="flex justify-between items-end">
+        <div>
+            <h1 class="font-h1 text-3xl font-bold text-on-background mb-1">Yêu cầu sửa chữa - SV: 2415053122232</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Quản lý và theo dõi các yêu cầu sửa chữa từ người thuê.</p>
+        </div>
+        <a href="/YeuCau/Create" class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary/90 shadow-sm transition-all">
+            <span class="material-symbols-outlined">add</span>
+            Tạo yêu cầu mới
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-grid-gutter mt-2">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-outline-variant/20 flex flex-col justify-between">
+            <div class="flex items-center gap-2 text-gray-500 mb-2">
+                <span class="material-symbols-outlined">inbox</span>
+                <span class="text-xs font-bold uppercase">Tổng số yêu cầu</span>
+            </div>
+            <div class="text-3xl font-bold text-on-surface">@total</div>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-outline-variant/20 flex flex-col justify-between">
+            <div class="flex items-center gap-2 text-red-600 mb-2">
+                <span class="material-symbols-outlined">priority_high</span>
+                <span class="text-xs font-bold uppercase">Ưu tiên cao</span>
+            </div>
+            <div class="text-3xl font-bold text-red-600">@highPriority</div>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-outline-variant/20 flex flex-col justify-between">
+            <div class="flex items-center gap-2 text-orange-600 mb-2">
+                <span class="material-symbols-outlined">pending_actions</span>
+                <span class="text-xs font-bold uppercase">Đang chờ</span>
+            </div>
+            <div class="text-3xl font-bold text-orange-600">@pending</div>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-outline-variant/20 flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent"></div>
+            <div class="relative z-10 flex items-center gap-2 text-primary mb-2">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span class="text-xs font-bold uppercase">Đã hoàn thành</span>
+            </div>
+            <div class="relative z-10 text-3xl font-bold text-primary">@completed</div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant/20 overflow-hidden flex flex-col mt-6">
+    <form method="get" action="/YeuCau/Index" class="p-4 border-b border-outline-variant/20 flex justify-between items-center bg-gray-50">
+        <div class="flex gap-2">
+            <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="px-3 py-1.5 rounded-md border border-gray-300 text-sm w-64" placeholder="Tìm tên, phòng, mô tả..." />
+            <button type="submit" class="px-3 py-1.5 rounded-md border border-gray-300 bg-white text-gray-700 text-xs font-bold hover:bg-gray-100 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">search</span> Tìm
+            </button>
+        </div>
+        <div class="text-gray-500 text-xs">Đang hiển thị @total yêu cầu</div>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+            <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Mã ID</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Người thuê & Phòng</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Mô tả sự cố</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Ngày gửi</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Ưu tiên</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider">Trạng thái</th>
+                    <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 tracking-wider text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-100">
+                @if (Model != null && Model.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in Model.Rows)
+                    {
+                        string status = row["TrangThai"]?.ToString() ?? "";
+                        string priority = row["UuTien"]?.ToString() ?? "";
+
+                        string statusClass = "bg-gray-100 text-gray-800";
+                        if (status == "Đang chờ") statusClass = "bg-orange-100 text-orange-800";
+                        else if (status == "Đang xử lý") statusClass = "bg-blue-100 text-primary";
+                        else if (status.Contains("Hoàn thành")) statusClass = "bg-green-100 text-green-800";
+
+                        string priorityClass = "bg-gray-100 text-gray-800";
+                        if (priority == "Cao") priorityClass = "bg-red-100 text-red-800";
+                        else if (priority == "Trung bình") priorityClass = "bg-orange-100 text-orange-800";
+                        else if (priority == "Thấp") priorityClass = "bg-blue-100 text-blue-800";
+
+                        string ngayGui = "";
+                        if (row["NgayGui"] != DBNull.Value)
+                        {
+                            ngayGui = Convert.ToDateTime(row["NgayGui"]).ToString("dd/MM/yyyy HH:mm");
+                        }
+
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-bold text-gray-500">@row["MaYeuCau"]</td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-800">Khách: @row["HoTen"]</div>
+                                <div class="text-xs text-gray-500 mt-0.5">Phòng: @row["TenPhong"]</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-gray-800 truncate max-w-[250px]">@row["TieuDe"]</div>
+                                <div class="text-xs text-gray-500 mt-0.5 truncate max-w-[250px]">@row["MoTa"]</div>
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">@ngayGui</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full @priorityClass text-xs font-bold">@priority</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full @statusClass text-xs font-bold">@status</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="/YeuCau/Edit?id=@row["MaYeuCau"]" class="text-primary hover:underline font-bold text-xs mr-3">Cập nhật</a>
+                                <a href="/YeuCau/Delete?id=@row["MaYeuCau"]" class="text-red-500 hover:text-red-700 font-bold text-xs" onclick="return confirm('Bạn có chắc muốn xóa yêu cầu này?');">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            Chưa có yêu cầu sửa chữa nào trong hệ thống.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 border-t border-gray-200 flex justify-end items-center bg-gray-50 gap-2">
+        <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-400 disabled:opacity-50" disabled>
+            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+        </button>
+        <button class="w-8 h-8 rounded bg-primary text-white font-bold text-xs flex items-center justify-center">1</button>
+        <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50" disabled>
+            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+        </button>
+    </div>
+</div>
