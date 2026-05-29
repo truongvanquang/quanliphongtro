@@ -1,0 +1,103 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+    Layout = "_Layout";
+    decimal daThu = 0;
+    decimal chuaThanhToan = 0;
+    decimal quaHan = 0;
+
+    if (Model != null)
+    {
+        foreach (System.Data.DataRow row in Model.Rows)
+        {
+            decimal tien = Convert.ToDecimal(row["TongTien"]);
+            string tt = row["TrangThai"].ToString();
+            if (tt == "Đã thanh toán") daThu += tien;
+            else if (tt == "Chưa thanh toán") chuaThanhToan += tien;
+            else if (tt == "Quá hạn") quaHan += tien;
+        }
+    }
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="bg-green-50 text-green-700 p-4 mb-4 rounded-lg font-bold">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="bg-red-50 text-red-700 p-4 mb-4 rounded-lg font-bold">@TempData["Error"]</div>
+}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Hóa đơn - SV: 2415053122232</h1>
+    </div>
+    <div class="flex gap-2">
+        <a href="/ThanhToan/Create" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm font-bold flex items-center">
+            + Thêm hóa đơn
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Đã thu tháng này</p>
+        <h3 class="text-2xl font-bold text-gray-900">@daThu.ToString("N0") đ</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tổng chưa thanh toán</p>
+        <h3 class="text-2xl font-bold text-gray-900">@chuaThanhToan.ToString("N0") đ</h3>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tiền quá hạn</p>
+        <h3 class="text-2xl font-bold text-red-600">@quaHan.ToString("N0") đ</h3>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <form method="get" action="/ThanhToan/Index" class="p-4 border-b flex gap-2">
+        <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="border px-4 py-2 rounded-lg w-72" placeholder="Tìm mã HĐ, tên khách, phòng..." />
+        <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-lg font-bold">Tìm kiếm</button>
+    </form>
+
+    <table class="w-full text-left">
+        <thead class="bg-gray-50 border-b">
+            <tr class="text-xs text-gray-500 uppercase tracking-wider">
+                <th class="p-4">Mã hóa đơn</th>
+                <th class="p-4">Khách thuê</th>
+                <th class="p-4">Phòng</th>
+                <th class="p-4">Số tiền</th>
+                <th class="p-4">Hạn thanh toán</th>
+                <th class="p-4">Trạng thái</th>
+                <th class="p-4 text-right">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 text-sm">
+            @if (Model != null && Model.Rows.Count > 0)
+            {
+                foreach (System.Data.DataRow row in Model.Rows)
+                {
+                    string status = row["TrangThai"].ToString();
+                    string badgeClass = "bg-gray-100 text-gray-600";
+                    if (status == "Đã thanh toán") badgeClass = "bg-blue-50 text-blue-600";
+                    else if (status == "Chưa thanh toán") badgeClass = "bg-orange-50 text-orange-600";
+                    else if (status == "Quá hạn") badgeClass = "bg-red-50 text-red-600";
+
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 font-medium text-blue-600">@row["MaHoaDon"]</td>
+                        <td class="p-4 font-bold">@row["HoTen"]</td>
+                        <td class="p-4 text-gray-600">@row["TenPhong"]</td>
+                        <td class="p-4 font-bold text-gray-900">@Convert.ToDecimal(row["TongTien"]).ToString("N0") đ</td>
+                        <td class="p-4 text-gray-600">@Convert.ToDateTime(row["HanThanhToan"]).ToString("dd/MM/yyyy")</td>
+                        <td class="p-4"><span class="px-3 py-1 rounded-full text-xs font-bold uppercase @badgeClass">@status</span></td>
+                        <td class="p-4 text-right flex justify-end gap-3">
+                            <a href="/ThanhToan/Edit?id=@row["MaHoaDon"]" class="text-blue-600 font-bold hover:underline">Sửa</a>
+                            <a href="/ThanhToan/Delete?id=@row["MaHoaDon"]" class="text-red-600 font-bold hover:underline" onclick="return confirm('Xóa hóa đơn này?');">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
