@@ -1,0 +1,163 @@
+﻿@using System.Data
+@model DataTable
+@{
+    ViewData["Title"] = "Yêu cầu sửa chữa - SV: 2415053122232";
+    Layout = "_UserLayout";
+
+    int tatCa = ViewBag.TatCa ?? 0;
+    int dangCho = ViewBag.DangCho ?? 0;
+    int dangXuLy = ViewBag.DangXuLy ?? 0;
+    int daXong = ViewBag.DaXong ?? 0;
+
+    string maKhach = ViewBag.MaKhachThue ?? "";
+    DataTable phongHienTai = ViewBag.PhongHienTai as DataTable;
+    string maPhong = (phongHienTai != null && phongHienTai.Rows.Count > 0) ? phongHienTai.Rows[0]["MaPhong"].ToString() : "";
+}
+
+<div class="max-w-6xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">Yêu cầu sửa chữa</h2>
+            <p class="text-base text-gray-500 mt-1">Mã Sinh Viên: 2415053122232</p>
+        </div>
+        <button type="button" onclick="document.getElementById('modalTaoYC').classList.remove('hidden')"
+                class="bg-[#006591] hover:bg-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-sm flex items-center gap-2 w-fit">
+            <span class="material-symbols-outlined">add_circle</span>
+            Tạo yêu cầu mới
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="px-4 py-3 bg-green-50 text-green-700 rounded-lg text-sm font-bold border border-green-200">
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="px-4 py-3 bg-red-50 text-red-700 rounded-lg text-sm font-bold border border-red-200">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm text-center">
+            <p class="text-xs font-bold text-gray-500 uppercase">Tất cả</p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">@tatCa</p>
+        </div>
+        <div class="bg-blue-50 p-5 rounded-xl border border-blue-100 shadow-sm text-center">
+            <p class="text-xs font-bold text-[#006591] uppercase">Đang chờ</p>
+            <p class="text-3xl font-bold text-[#006591] mt-1">@dangCho</p>
+        </div>
+        <div class="bg-orange-50 p-5 rounded-xl border border-orange-100 shadow-sm text-center">
+            <p class="text-xs font-bold text-orange-600 uppercase">Đang xử lý</p>
+            <p class="text-3xl font-bold text-orange-600 mt-1">@dangXuLy</p>
+        </div>
+        <div class="bg-green-50 p-5 rounded-xl border border-green-100 shadow-sm text-center">
+            <p class="text-xs font-bold text-green-700 uppercase">Đã xong</p>
+            <p class="text-3xl font-bold text-green-700 mt-1">@daXong</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-5 border-b border-gray-100 bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#006591]">build</span>
+                Lịch sử yêu cầu
+            </h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-bold tracking-wider">
+                        <th class="px-6 py-4">Ngày gửi</th>
+                        <th class="px-6 py-4">Vấn đề</th>
+                        <th class="px-6 py-4">Phòng</th>
+                        <th class="px-6 py-4">Mức độ</th>
+                        <th class="px-6 py-4 text-center">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm text-gray-700 divide-y divide-gray-100">
+                    @if (Model == null || Model.Rows.Count == 0)
+                    {
+                        <tr><td colspan="5" class="px-6 py-10 text-center text-gray-500 font-medium">Bạn chưa có yêu cầu nào.</td></tr>
+                    }
+                    else
+                    {
+                        foreach (DataRow row in Model.Rows)
+                        {
+                            string tt = row["TrangThai"].ToString();
+                            string ttBadge = tt == "Đang chờ" ? "bg-blue-50 text-[#006591] border-blue-200"
+                                : tt == "Đang xử lý" ? "bg-orange-50 text-orange-700 border-orange-200"
+                                : "bg-green-50 text-green-700 border-green-200";
+
+                            string uuTien = row["UuTien"].ToString();
+                            string uuBadge = uuTien == "Khẩn cấp" ? "bg-red-100 text-red-700"
+                                : uuTien == "Trung bình" ? "bg-yellow-100 text-yellow-700"
+                                : "bg-gray-100 text-gray-600";
+
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900">@(row["NgayGui"] != DBNull.Value ? Convert.ToDateTime(row["NgayGui"]).ToString("dd/MM/yyyy") : "")</td>
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-gray-900">@row["TieuDe"]</p>
+                                    <p class="text-xs text-gray-500 mt-1">@row["MoTa"]</p>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">@(row["TenPhong"] != DBNull.Value ? row["TenPhong"].ToString() : "")</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-1 text-[11px] font-bold rounded uppercase @uuBadge">@uuTien</span>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="px-3 py-1 text-xs font-bold rounded-full border @ttBadge">@tt</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modalTaoYC" class="hidden fixed inset-0 bg-black/60 z-[99] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-900">Tạo yêu cầu sửa chữa mới</h3>
+            <button type="button" onclick="document.getElementById('modalTaoYC').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form action="/UserYeuCau/TaoYeuCau" method="post" class="p-6 space-y-5">
+            <input type="hidden" name="MaKhachThue" value="@maKhach" />
+            <input type="hidden" name="MaPhong" value="@maPhong" />
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Tiêu đề vấn đề</label>
+                <input type="text" name="TieuDe" required placeholder="VD: Vòi nước bị rò rỉ"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50" />
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Mô tả chi tiết</label>
+                <textarea name="MoTa" rows="3" placeholder="Mô tả vị trí và tình trạng hỏng..."
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50 resize-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Mức độ ưu tiên</label>
+                <select name="UuTien" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm outline-none focus:border-[#006591] focus:ring-1 focus:ring-[#006591] bg-gray-50 cursor-pointer">
+                    <option value="Nhẹ">Nhẹ</option>
+                    <option value="Trung bình" selected>Trung bình</option>
+                    <option value="Khẩn cấp">Khẩn cấp</option>
+                </select>
+            </div>
+            <div class="flex gap-3 pt-4 border-t border-gray-100">
+                <button type="button" onclick="document.getElementById('modalTaoYC').classList.add('hidden')"
+                        class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-200 transition-colors">
+                    Hủy bỏ
+                </button>
+                <button type="submit"
+                        class="flex-1 bg-[#006591] text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition-colors shadow-sm">
+                    Gửi yêu cầu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
