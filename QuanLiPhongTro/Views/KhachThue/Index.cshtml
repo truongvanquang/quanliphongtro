@@ -1,0 +1,170 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Quản lý khách thuê";
+    Layout = "_Layout";
+
+    int total = Model?.Rows.Count ?? 0;
+    int active = 0;
+    int expired = 0;
+
+    if (Model != null)
+    {
+        foreach (System.Data.DataRow r in Model.Rows)
+        {
+            string statusInfo = r["TrangThai"]?.ToString()?.ToUpper() ?? "";
+            if (statusInfo.Contains("ĐANG")) active++;
+            if (statusInfo.Contains("HẾT") || statusInfo.Contains("TRỐNG")) expired++;
+        }
+    }
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="bg-green-50 text-green-700 p-4 mb-4 rounded-lg shadow-sm border-l-4 border-green-500 font-bold">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="bg-red-50 text-red-700 p-4 mb-4 rounded-lg shadow-sm border-l-4 border-red-500 font-bold">@TempData["Error"]</div>
+}
+
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+    <div>
+        <h2 class="font-h1 text-h1 text-on-surface">Quản lý khách thuê - SV: 2415053122232</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Xem và quản lý tất cả khách thuê đã đăng ký trên các bất động sản của bạn.</p>
+    </div>
+    <a href="/KhachThue/Create" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg font-label-md text-label-md hover:bg-primary/90 hover:shadow-md transition-all">
+        <span class="material-symbols-outlined text-[20px]">person_add</span>
+        Thêm khách thuê mới
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter mt-6">
+    <div class="bg-surface p-card-padding rounded-xl shadow-sm border border-outline-variant/20 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">group</span>
+        </div>
+        <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Tổng số tìm thấy</p>
+            <p class="font-h2 text-h2 text-on-surface mt-0.5">@total</p>
+        </div>
+    </div>
+    <div class="bg-surface p-card-padding rounded-xl shadow-sm border border-outline-variant/20 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-[#dcfce7] flex items-center justify-center text-[#166534]">
+            <span class="material-symbols-outlined">how_to_reg</span>
+        </div>
+        <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Hợp đồng hiệu lực</p>
+            <p class="font-h2 text-h2 text-on-surface mt-0.5">@active</p>
+        </div>
+    </div>
+    <div class="bg-surface p-card-padding rounded-xl shadow-sm border border-outline-variant/20 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined">event_upcoming</span>
+        </div>
+        <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sắp hết hạn</p>
+            <p class="font-h2 text-h2 text-on-surface mt-0.5">@expired</p>
+        </div>
+    </div>
+</div>
+
+<div class="bg-surface rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col mt-6">
+    <form method="get" action="/KhachThue/Index" class="p-4 border-b border-outline-variant/20 bg-surface-container-low flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div class="relative w-full sm:max-w-xs">
+            <button type="submit" class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined">search</span>
+            </button>
+            <input name="searchString" value="@ViewBag.CurrentSearch" class="w-full pl-10 pr-4 py-2 border border-outline-variant/50 rounded-lg bg-surface text-on-surface font-body-sm focus:border-primary focus:ring-1 focus:ring-primary transition-shadow placeholder:text-outline" placeholder="Tìm tên, SĐT, CCCD..." type="text" />
+        </div>
+        <div class="flex gap-3 w-full sm:w-auto">
+            <select name="statusFilter" onchange="this.form.submit()" class="flex-1 sm:flex-none py-2 pl-3 pr-8 border border-outline-variant/50 rounded-lg bg-surface text-on-surface font-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                <option value="">Tất cả trạng thái</option>
+                <!option value="active" @(ViewBag.CurrentFilter == "active" ? "selected" : "")>Đang thuê</!option>
+                <!option value="expired" @(ViewBag.CurrentFilter == "expired" ? "selected" : "")>Đã chuyển đi</!option>
+            </select>
+            <button type="submit" class="p-2 border border-outline-variant/50 rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined">filter_list</span>
+            </button>
+        </div>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+                <tr class="bg-surface-bright border-b border-outline-variant/20">
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Khách thuê</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Số điện thoại</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Số CCCD</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ngày tham gia</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Trạng thái</th>
+                    <th class="py-3 px-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-outline-variant/10">
+                @if (Model != null && Model.Rows.Count > 0)
+                {
+                    foreach (System.Data.DataRow row in Model.Rows)
+                    {
+                        string hoTen = row["HoTen"]?.ToString() ?? "N/A";
+                        string initials = "KT";
+                        if (!string.IsNullOrWhiteSpace(hoTen))
+                        {
+                            var parts = hoTen.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length >= 2) initials = (parts[0][0].ToString() + parts[parts.Length - 1][0].ToString()).ToUpper();
+                            else initials = parts[0].Substring(0, Math.Min(2, parts[0].Length)).ToUpper();
+                        }
+
+                        string status = row["TrangThai"]?.ToString()?.ToUpper() ?? "";
+                        string dateStr = row["NgayThamGia"] != DBNull.Value ? Convert.ToDateTime(row["NgayThamGia"]).ToString("dd/MM/yyyy") : "";
+
+                        string avatarClass = "bg-primary-container/30 text-primary";
+                        if (status.Contains("HẾT")) avatarClass = "bg-surface-container-highest text-on-surface-variant";
+                        else if (hoTen.Contains("Trần") || hoTen.Contains("Thị")) avatarClass = "bg-tertiary-container/30 text-tertiary";
+
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full @avatarClass flex items-center justify-center font-label-md font-bold">@initials</div>
+                                    <p class="font-label-md text-on-surface">@hoTen</p>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-on-surface-variant">@row["SoDienThoai"]</td>
+                            <td class="py-3 px-4 text-on-surface-variant">@row["CCCD"]</td>
+                            <td class="py-3 px-4 text-on-surface-variant">@dateStr</td>
+                            <td class="py-3 px-4">
+                                @if (status.Contains("ĐANG"))
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold tracking-wide bg-[#dcfce7] text-[#166534]">ĐANG THUÊ</span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold tracking-wide bg-surface-container-high text-on-surface-variant">HẾT HẠN</span>
+                                }
+                            </td>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <a href="#" class="p-1.5 text-on-surface-variant hover:text-primary rounded hover:bg-primary-container/20 transition-colors"><span class="material-symbols-outlined text-[18px]">chat</span></a>
+                                    <a href="/KhachThue/Edit?id=@row["MaKhachThue"]" class="p-1.5 text-on-surface-variant hover:text-primary rounded hover:bg-primary-container/20 transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></a>
+                                    <a href="/KhachThue/Details?id=@row["MaKhachThue"]" class="p-1.5 text-on-surface-variant hover:text-primary rounded hover:bg-primary-container/20 transition-colors"><span class="material-symbols-outlined text-[18px]">visibility</span></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-on-surface-variant">
+                            Không tìm thấy kết quả nào phù hợp.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-4 border-t border-outline-variant/20 bg-surface-container-low flex items-center justify-between text-on-surface-variant font-body-sm">
+        <p>Đang hiển thị @total kết quả</p>
+    </div>
+</div>
